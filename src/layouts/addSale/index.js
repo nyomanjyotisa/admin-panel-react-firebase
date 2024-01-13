@@ -157,21 +157,25 @@ function AddSale() {
 
   const fetchAllBrands = async (selectedBrand) => {
     // get data from database
-    const getAllDocs = await getDocs(collection(db, "brands"));
-    const dbData = getAllDocs.docs.map((items) => ({ id: items.id, ...items.data() }))
-    let allBrands = dbData.map((filterItems) => {
-      return {
-        id: filterItems.id,
-        name: filterItems.name,
-      }
-    })
-    setBrandsDropdown(allBrands)
+    if (selectedBrand) {
+      const getAllDocs = await getDocs(collection(db, "brands"));
+      const dbData = getAllDocs.docs.map((items) => ({ id: items.id, ...items.data() }))
+      let allBrands = dbData.map((filterItems) => {
+        return {
+          id: filterItems.id,
+          name: filterItems.name,
+        }
+      })
+      setBrandsDropdown(allBrands)
 
-    const getSpecificBrands = await getDoc(doc(db, "brands", selectedBrand));
-    if (getSpecificBrands.exists()) {
-      setBrandDbData(getSpecificBrands.data())
-    } else {
-      console.log("No such document!");
+      console.log(selectedBrand, 'selectedBrand fetchAllBrands')
+
+      const getSpecificBrands = await getDoc(doc(db, "brands", selectedBrand));
+      if (getSpecificBrands.exists()) {
+        setBrandDbData(getSpecificBrands.data())
+      } else {
+        console.log("No such document!");
+      }
     }
   };
   React.useEffect(() => {
@@ -181,17 +185,21 @@ function AddSale() {
 
   const fetchAllBrands2 = async (selectedBrand) => {
     // get data from database
-    const q = query(collection(db, "users"), where("uid", "==", currentUser))
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      setSelectedBrand(doc.data().brandName)
-    })
+    if (selectedBrand) {
+      const q = query(collection(db, "users"), where("uid", "==", currentUser))
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setSelectedBrand(doc.data().brandName)
+      })
 
-    const q2 = query(collection(db, "brands"), where("name", "==", selectedBrand))
-    const querySnapshot2 = await getDocs(q2);
-    querySnapshot2.forEach((doc) => {
-      setBrandDbData(doc.data())
-    })
+      console.log(selectedBrand, 'selectedBrand fetchAllBrands2')
+
+      const q2 = query(collection(db, "brands"), where("name", "==", selectedBrand))
+      const querySnapshot2 = await getDocs(q2);
+      querySnapshot2.forEach((doc) => {
+        setBrandDbData(doc.data())
+      })
+    }
   };
   React.useEffect(() => {
     role === "brand" && fetchAllBrands2(selectedBrand)

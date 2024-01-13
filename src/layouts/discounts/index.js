@@ -154,19 +154,23 @@ function Discounts() {
     })
     setBrandDropdown(allBrandsName)
 
-    const getSpecificBank = await getDoc(doc(db, "banks", selectedBank));
-    if (getSpecificBank.exists()) {
-      setCardDropdown(getSpecificBank.data().cards)
-      setBankDbData(getSpecificBank.data())
-    } else {
-      console.log("No such document!");
+    if (selectedBank) {
+      const getSpecificBank = await getDoc(doc(db, "banks", selectedBank));
+      if (getSpecificBank.exists()) {
+        setCardDropdown(getSpecificBank.data().cards)
+        setBankDbData(getSpecificBank.data())
+      } else {
+        console.log("No such document!");
+      }
     }
 
-    const getSpecificBrandData = await getDoc(doc(db, "brands", selectedBrand));
-    if (getSpecificBrandData.exists()) {
-      setBrandDbData(getSpecificBrandData.data())
-    } else {
-      console.log("No such document!");
+    if (selectedBrand) {
+      const getSpecificBrandData = await getDoc(doc(db, "brands", selectedBrand));
+      if (getSpecificBrandData.exists()) {
+        setBrandDbData(getSpecificBrandData.data())
+      } else {
+        console.log("No such document!");
+      }
     }
   };
   React.useEffect(() => {

@@ -44,12 +44,15 @@ const Login = () => {
     //check authentication
     signInWithEmailAndPassword(auth, loginUser.email, loginUser.password)
       .then(async (userCredential) => {
+        console.log(userCredential, 'userCredential')
         const user = userCredential.user;
         // console.log('user == ', user.uid)
         dispatchAuth({ type: 'LOGIN', payload: user.uid })
         const q = query(collection(db, "users"), where("uid", "==", user.uid))
         const querySnapshot = await getDocs(q);
+        console.log(querySnapshot, 'querySnapshot')
         querySnapshot.forEach((doc) => {
+          console.log(doc.data(), 'doc.data()')
           dispatchAuthRole({ type: 'LOGIN_ROLE', payload: doc.data().role })
         })
         navigate(`/${role}/dashboard`)
@@ -60,6 +63,7 @@ const Login = () => {
         setLoading(false)
       })
       .catch((error) => {
+        console.log(error, 'login error')
         setLoginError(true)
         setLoading(false)
       });

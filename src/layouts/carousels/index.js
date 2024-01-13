@@ -95,14 +95,16 @@ function Carousels() {
       Object.assign(carouselData, dbCarouselData[i]);
     }
     setCarouselId(carouselData.id)
-    setCarouselLength(carouselData.carousels.length)
+    setCarouselLength(carouselData.carousels ? carouselData.carousels.length : 0)
 
-    const getSpecificSale = await getDoc(doc(db, "sales", selectedSale));
-    if (getSpecificSale.exists()) {
-      setSalesDbData(getSpecificSale.data())
-      setSalesDbBrandData(getSpecificSale.data().brand)
-    } else {
-      console.log("No such document!");
+    if (selectedSale) {
+      const getSpecificSale = await getDoc(doc(db, "sales", selectedSale));
+      if (getSpecificSale.exists()) {
+        setSalesDbData(getSpecificSale.data())
+        setSalesDbBrandData(getSpecificSale.data().brand)
+      } else {
+        console.log("No such document!");
+      }
     }
 
   };
